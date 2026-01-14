@@ -1,0 +1,36 @@
+name: Enterprise CI Pipeline
+
+# 触发规则：当推送到 main 或有 PR 提交时触发
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码 (Checkout)
+        uses: actions/checkout@v3
+
+      - name: 设置 Python 环境
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: 模拟代码风格检查 (Lint)
+        run: |
+          echo "正在检查代码规范..."
+          # 这里我们做一个简单的逻辑：如果代码里包含 "HACK" 这个词，就报错
+          if grep -q "HACK" *.py; then
+            echo "错误：发现禁止使用的词汇 'HACK'，请修改代码！"
+            exit 1
+          fi
+          echo "代码风格检查通过！"
+
+      - name: 模拟单元测试 (Test)
+        run: |
+          echo "正在运行单元测试..."
+          # 这里模拟运行测试，直接通过
+          echo "所有测试通过！"
